@@ -22,3 +22,50 @@ From ChicagoCrime
 Select "COMMUNITY AREA NAME", "PER CAPITA INCOME "
 From ChicagoCensus
 Where "PER CAPITA INCOME " < 11000
+
+%%sql 
+Select case_number 
+From ChicagoCrime 
+Where (lower(DESCRIPTION) Like "%minor%") 
+
+%%sql
+Select *
+From ChicagoCrime
+Where lower(Primary_Type) = 'kidnapping'
+
+%%sql
+Select distinct(Primary_type)
+From ChicagoCrime
+Where LOCATION_DESCRIPTION Like "%SCHOOL%"
+
+%%sql
+Select "Elementary, Middle, or High School", avg("Safety Score") as "Average Safety Score"
+From ChicagoPublicSchools
+Group by "Elementary, Middle, or High School"
+
+%%sql
+Select "Community area name", "PERCENT HOUSEHOLDS BELOW POVERTY"
+From ChicagoCensus
+Order By "PERCENT HOUSEHOLDS BELOW POVERTY" DESC Limit 5;
+
+%%sql
+Select "Community Area Number", max("Frequency") as "Frequency"
+From (Select Cen."Community Area Number",Cen."Community Area Name", count(Crime."Case_number") as "Frequency"
+      From ChicagoCrime Crime, ChicagoCensus Cen
+      Where Cen."Community Area Number" = Crime."Community_Area_Number"
+      Group by Cen."Community Area Name"
+      Order By "Frequency" DESC)
+      
+%%sql
+Select "Community Area Name", max("hardship index") as "max of Harship_index"
+From (Select "Community Area Name", "hardship index"
+      From ChicagoCensus
+      Order By "hardship index" DESC)
+      
+%%sql
+Select "Community Area Name", max("Frequency") as "Frequency"
+From (Select Cen."Community Area Number",Cen."Community Area Name", count(Crime."Case_number") as "Frequency"
+      From ChicagoCrime Crime, ChicagoCensus Cen
+      Where Cen."Community Area Number" = Crime."Community_Area_Number"
+      Group by Cen."Community Area Name"
+      Order By "Frequency" DESC)
