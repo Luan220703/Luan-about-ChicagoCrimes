@@ -1,0 +1,24 @@
+%load_ext sql
+import csv, sqlite3
+con = sqlite3.connect("SQLiteMagic.db")
+cur = con.cursor()
+import pandas as pd
+df = pd.read_csv("Census_Data_-_Selected_socioeconomic_indicators_in_Chicago__2008___2012.csv")
+df.to_sql("ChicagoCensus",con, if_exists = 'replace', index = False, method = 'multi')
+
+df = pd.read_csv("ChicagoCrimeData.csv")
+df.to_sql("ChicagoCrime",con, if_exists = 'replace', index = False, method = 'multi')
+
+df = pd.read_csv('Chicago_Public_Schools_-_Progress_Report_Cards__2011-2012_.csv')
+df.to_sql("ChicagoPublicSchools", con, if_exists = 'replace', index = False, method = 'multi')
+
+%sql sqlite:///SQLiteMagic.db
+
+%%sql
+Select count(*) as "Number of Crimes" 
+From ChicagoCrime
+
+%%sql
+Select "COMMUNITY AREA NAME", "PER CAPITA INCOME "
+From ChicagoCensus
+Where "PER CAPITA INCOME " < 11000
